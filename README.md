@@ -4,6 +4,16 @@ A GitHub Action that resolves release metadata from either a raw version string 
 
 It optionally removes one exact prefix, then parses the remaining text as a semantic version. The action exposes the semantic version and its parsed components for use by later release, publish, or deployment steps.
 
+## Migration from `publish-tag`
+
+This action was previously published as `yukiakai212/publish-tag`. Existing published versions of that action remain available, but new workflows should migrate to:
+
+```yaml
+uses: yukiakai212/resolve-release-metadata@v2
+```
+
+See the [changelog](CHANGELOG.md) for the complete migration and behavior changes.
+
 ## Inputs
 
 | Input | Required | Default | Description |
@@ -17,7 +27,7 @@ It optionally removes one exact prefix, then parses the remaining text as a sema
 
 | Output | Description |
 | --- | --- |
-| `release-tag` | Git release tag derived from the semantic version. |
+| `release-tag` | Git release tag formed by prefixing `version` with `v`. Build metadata is excluded; for example, `1.2.3+build.7` becomes `v1.2.3`. |
 | `full` | Full semantic version, including build metadata when present. |
 | `version` | Semantic version without build metadata, for example `1.2.3-beta.1`. |
 | `major` | Major version number. |
@@ -33,13 +43,11 @@ For example, `" v1.2.3 "` fails rather than becoming `v1.2.3`, and `prefix-to-re
 
 ## Usage
 
-Replace `<version>` with a released version of this action.
-
 ### Resolve a raw version
 
 ```yaml
 - id: metadata
-  uses: yukiakai212/resolve-release-metadata@<version>
+  uses: yukiakai212/resolve-release-metadata@v2
   with:
     raw-version: v1.2.3-beta.1+build.7
     prefix-to-remove: v
@@ -59,7 +67,7 @@ steps:
   - uses: actions/checkout@v7
 
   - id: metadata
-    uses: yukiakai212/resolve-release-metadata@<version>
+    uses: yukiakai212/resolve-release-metadata@v2
     with:
       package-type: node
 ```
@@ -73,7 +81,7 @@ steps:
   - uses: actions/checkout@v7
 
   - id: metadata
-    uses: yukiakai212/resolve-release-metadata@<version>
+    uses: yukiakai212/resolve-release-metadata@v2
     with:
       package-type: cargo
       package-directory: crates/cli
